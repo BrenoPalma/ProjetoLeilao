@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect MetaMask</title>
+    <script src="./app.js"></script>
+</head>
+<body>
+    <button id="connectButton">Connect MetaMask</button>
+    <script>
+        document.getElementById('connectButton').addEventListener('click', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    alert('MetaMask is connected');
+                } catch (error) {
+                    console.error('User denied account access:', error);
+                }
+            } else {
+                alert('MetaMask is not installed');
+            }
+        });
+    </script>
+</body>
+</html>

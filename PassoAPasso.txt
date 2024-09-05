@@ -1,0 +1,7 @@
+Deploy do DigitalToken
+Usuario1 cria o Leilão as Cegas (timer lance, timer revelacao, hash token)
+Outros usuarios vão fazer os lances (valor, segredo) -chama a função de criptografia e depois manda o hash gerado para o contrato
+Acaba o tempo de lances
+Usuarios revelam seus lances (valor, segredo) - aprove no digital token tbm
+Usuario1 finaliza o leilão
+ideia:Usuarios verificam se foram os ganhadores (botão no front)

@@ -1,6 +1,5 @@
 import Web3 from 'web3';
 import contractAbi from './contracts/DigitalToken.json'; // ABI e bytecode do contrato
-const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
 
 const deployContract = async () => {
   if (typeof window.ethereum === 'undefined') {
@@ -41,7 +40,7 @@ const deployContract = async () => {
 
 // Função para transferir tokens
 const transferToken = async (tokenAddress, recipientAddress) => {
-
+      const web3 = new Web3(window.ethereum);
       // Solicita acesso às contas do MetaMask
       await window.ethereum.request({ method: 'eth_requestAccounts' });
   
@@ -68,6 +67,7 @@ const transferToken = async (tokenAddress, recipientAddress) => {
 
 const balance = async (tokenAddress, address) => {
   try {
+    const web3 = new Web3(window.ethereum);
     const contract = new web3.eth.Contract(contractAbi.abi, tokenAddress);
     const balance = await contract.methods.balanceOf(address).call();
     console.log(`Saldo do endereço ${address}: ${balance}`);

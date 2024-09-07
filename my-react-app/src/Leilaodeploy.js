@@ -111,8 +111,6 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
                 gas: 100000, // Ajuste conforme necessário
                 gasPrice: 300
             })
-            console.log(tokenAddress);
-            console.log(leilaoAddress);
             // Chama o método de revelar lance do contrato
             await contract.methods.revelarLance(lance, segredo).send({
                 from: account,
@@ -126,9 +124,71 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
             throw error;
         }
     }
+
+    const finalizarLeilao = async (leilaoAddress) => {
+        if (typeof window.ethereum === 'undefined') {
+            throw new Error('MetaMask is not installed');
+        }
+        
+        const web3 = new Web3(window.ethereum);
+        
+        // Solicita acesso às contas do MetaMask
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        
+        const accounts = await web3.eth.getAccounts();
+        const account = accounts[0]; // Usa a primeira conta
+        
+        // Inicializa o contrato com a ABI
+        const contract = new web3.eth.Contract(contractAbi.abi, leilaoAddress);
+        
+        try {
+            // Chama o método de finalizar leilão do contrato
+            await contract.methods.finalizarLeilao().send({
+                from: account,
+                gas: 100000, // Ajuste conforme necessário
+                gasPrice: 300
+            });
+        
+            console.log(`Leilão finalizado com sucesso em ${leilaoAddress}`);
+        } catch (error) {
+            console.error('Erro ao finalizar leilão:', error);
+            throw error;
+        }
+    }
+    const mostrarGanhador = async (leilaoAddress) => {
+        if (typeof window.ethereum === 'undefined') {
+            throw new Error('MetaMask is not installed');
+        }
+        
+        const web3 = new Web3(window.ethereum);
+        
+        // Solicita acesso às contas do MetaMask
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        // Inicializa o contrato com a ABI
+        const contract = new web3.eth.Contract(contractAbi.abi, leilaoAddress);
+        
+        try {
+            // Chama o método de finalizar leilão do contrato
+            const ganhador = await contract.methods.mostrarGanhador().call();
+            //retorna o endereço do ganhador e o maior lance
+            //printa o tipo de dado da variavel ganhador
+            const maiorLicitante = ganhador[0];
+            const maiorLance = ganhador[1];
+            console.log('Endereço do ganhador:', maiorLicitante);
+            console.log('Maior lance:', maiorLance.toString());
+            
+            // Retorna o endereço do ganhador e o maior lance
+            return { maiorLicitante, maiorLance: maiorLance.toString() };
+        } catch (error) {
+            console.error('Erro ao mostrar ganhador,Leilão não finalizado', error);
+            throw error;
+        }
+    }
+
     export { deployLeilao };
     export { enviarLance };
     export { revelarLance };
-
+    export { finalizarLeilao };
+    export { mostrarGanhador };
 
    

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { enviarLance,revelarLance } from './Leilaodeploy';
+import { enviarLance,revelarLance,mostrarGanhador } from './Leilaodeploy';
 
 function ParticiparLeilao(){
     //usuario precisa do endereço do leilao e do valor do lance e de um segredo que ele ira criar
@@ -9,6 +9,8 @@ function ParticiparLeilao(){
     const [participarStatus, setParticiparStatus] = useState('');
     const [participarAddress, setParticiparAddress] = useState('');
     const [revelarStatus, setRevelarStatus] = useState(''); 
+    const [ganhador, setGanhador] = useState(''); // Novo estado para o ganhador
+    const [maiorLance, setMaiorLance] = useState(''); // Novo estado para o maior lance
     //criar handle para participar do leilao
     const handleParticiparLeilao = async () => {
         try {
@@ -43,6 +45,15 @@ function ParticiparLeilao(){
         } catch (error) {
           console.error('Erro ao revelar lance:', error);
           setRevelarStatus('Erro ao revelar lance. Verifique os dados e tente novamente.');
+        }
+      };
+      const handleMostrarGanhador = async () => {
+        try {
+          const resultado = await mostrarGanhador(leilaoAddress);
+          setGanhador(resultado.maiorLicitante); // Assume que maiorLicitante é uma string
+          setMaiorLance(resultado.maiorLance); // Assume que maiorLance é uma string
+        } catch (error) {
+          setRevelarStatus('Erro ao mostrar ganhador: ' + error.message);
         }
       };
     return (
@@ -103,6 +114,21 @@ function ParticiparLeilao(){
             </label>
             <button onClick={handleRevelarLance}>Revelar Lance</button>
             <p>{revelarStatus}</p>
+            <label>
+            Endereço do Leilão:
+            <input
+              type="text"
+              value={leilaoAddress}
+              onChange={(e) => setLeilaoAddress(e.target.value)}
+            />
+            </label>
+            <button onClick={handleMostrarGanhador}>Mostrar Ganhador</button>
+            {ganhador && (
+            <div>
+            <p>Ganhador: {ganhador}</p>
+            <p>Maior Lance: {maiorLance}</p>
+        </div>
+      )}
           </div>
         </div>
       );

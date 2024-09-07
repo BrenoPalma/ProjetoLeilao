@@ -4,22 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect MetaMask</title>
-    <script src="./app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
 </head>
 <body>
     <button id="connectButton">Connect MetaMask</button>
+    <p id="status">Not connected</p>
     <script>
-        document.getElementById('connectButton').addEventListener('click', async () => {
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    alert('MetaMask is connected');
-                } catch (error) {
-                    console.error('User denied account access:', error);
+        document.addEventListener("DOMContentLoaded", () => {
+            const connectButton = document.getElementById("connectButton");
+            const statusDisplay = document.getElementById("status");
+
+            async function connect() {
+                console.log("Connecting to MetaMask...");
+                if (typeof window.ethereum !== "undefined") {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    try {
+                        await provider.send("eth_requestAccounts", []);
+
+                        const signer = provider.getSigner();
+                        const address = await signer.getAddress();
+                        statusDisplay.textContent = `Connected: ${address}`;
+                    } catch (error) {
+                        console.error("Error connecting to MetaMask:", error.message);
+                        statusDisplay.textContent = `Error: ${error.message}`;
+                    }
+                } else {
+                    alert("MetaMask is not installed");
+                    statusDisplay.textContent = "MetaMask is not installed";
                 }
-            } else {
-                alert('MetaMask is not installed');
             }
+
+            connectButton.addEventListener("click", connect);
         });
     </script>
 </body>

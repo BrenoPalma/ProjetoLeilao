@@ -14,7 +14,7 @@ contract LeilaoAsCegas {
     uint public fimPeriodoLances;
     uint public fimPeriodoRevelacao;
     IERC20 public token;
-    
+
     mapping(address => Lance) public lances;
     address public maiorLicitante;
     uint public maiorLance;
@@ -43,7 +43,7 @@ contract LeilaoAsCegas {
         Lance storage lance = lances[msg.sender];
         require(lance.valorCego == keccak256(abi.encodePacked(_valor, _segredo)), "Lance invalido");
         require(!lance.revelado, "Lance ja revelado");
-
+        
         lance.valor = _valor;
         lance.revelado = true;
 

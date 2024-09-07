@@ -21,7 +21,7 @@ async function deploy() {
 
         // Implantar o contrato ERC20 com quantidade inicial
         const tokenContract = new web3.eth.Contract(tokenArtifact.abi);
-        const tokenInstance = await tokenContract.deploy({ 
+        const tokenInstance = await tokenContract.deploy({
             data: tokenArtifact.bytecode, 
             arguments: [initialSupply]
         })

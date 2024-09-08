@@ -10,6 +10,7 @@ function CriarLeilao() {
   const [finalizarStatus, setFinalizarStatus] = useState(''); // Novo estado para a mensagem de finalização
   const [ganhador, setGanhador] = useState(''); // Novo estado para o ganhador
   const [maiorLance, setMaiorLance] = useState(''); // Novo estado para o maior lance
+  const [leilaoadress2, setLeilaoAdress2] = useState(''); // Novo estado para o endereço do leilão
 
   const handleCriarLeilao = async () => {
     try {
@@ -23,7 +24,7 @@ function CriarLeilao() {
 
   const handleFinalizarLeilao = async () => {
     try {
-      await finalizarLeilao(leilaoAddress);
+      await finalizarLeilao(leilaoadress2);
       setFinalizarStatus('Leilão finalizado com sucesso!');
     } catch (error) {
       setFinalizarStatus('Erro ao finalizar leilão: ' + error.message);
@@ -72,17 +73,37 @@ function CriarLeilao() {
         <div>
           <h2>Leilão Criado</h2>
           <p>Endereço do leilão: {leilaoAddress}</p>
-          <button onClick={handleFinalizarLeilao}>Finalizar Leilão</button>
-          <p>{finalizarStatus}</p> {/* Mensagem de status da finalização */}
+        </div>
+      )}
+      <div>
+      <label>
+        Endereço Leilão:
+        <input
+          type="text"
+          value={leilaoadress2}
+          onChange={(e) => setLeilaoAdress2(e.target.value)}
+        />
+      </label>
+      <button onClick={handleFinalizarLeilao}>Finalizar Leilão</button>
+      <p>{finalizarStatus}</p> {/* Mensagem de status da finalização */}
+      </div>
+      <div>
+      <label>
+        Endereço Leilão:
+        <input
+          type="text"
+          value={leilaoadress2}
+          onChange={(e) => setLeilaoAdress2(e.target.value)}
+        />
+      </label>
           <button onClick={handleMostrarGanhador}>Mostrar Ganhador</button>
+          </div>
           {ganhador && (
             <div>
               <p>Ganhador: {ganhador}</p>
               <p>Maior Lance: {maiorLance}</p>
             </div>
           )}
-        </div>
-      )}
     </div>
   );
 }

@@ -28,7 +28,7 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
         .send({
             from: account,
             gas: '1500000', // Ajuste conforme necessário
-            gasPrice: '300', // Ajuste conforme necessário
+            gasPrice: '300717935', // Ajuste conforme necessário
         });
     
         console.log('Contrato implantado com sucesso no endereço:', deployedContract.options.address);
@@ -77,7 +77,7 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
             await contract.methods.enviarLance(valorCego).send({
                 from: account,
                 gas: 100000, // Ajuste conforme necessário
-                gasPrice: 300
+                gasPrice: 300717935
             });
         
             console.log(`Lance de ${lance} enviado com sucesso para ${leilaoAddress}`);
@@ -109,13 +109,13 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
             await tokenContract.methods.approve(leilaoAddress, lance).send({
                 from: account,
                 gas: 100000, // Ajuste conforme necessário
-                gasPrice: 300
+                gasPrice: 300717935
             })
             // Chama o método de revelar lance do contrato
             await contract.methods.revelarLance(lance, segredo).send({
                 from: account,
                 gas: 900000, // Ajuste conforme necessário
-                gasPrice: 300
+                gasPrice: 300717935
             });
         
             console.log(`Lance de ${lance} revelado com sucesso para ${leilaoAddress}`);
@@ -146,7 +146,7 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
             await contract.methods.finalizarLeilao().send({
                 from: account,
                 gas: 100000, // Ajuste conforme necessário
-                gasPrice: 300
+                gasPrice: 300717935
             });
         
             console.log(`Leilão finalizado com sucesso em ${leilaoAddress}`);

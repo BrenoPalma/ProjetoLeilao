@@ -1,6 +1,5 @@
 import Web3 from 'web3';
 import contractAbi from './contracts/DigitalToken.json'; // ABI e bytecode do contrato
-
 const deployContract = async () => {
   if (typeof window.ethereum === 'undefined') {
     throw new Error('MetaMask is not installed');
@@ -27,7 +26,7 @@ const deployContract = async () => {
       .send({
         from: account,
         gas: '1500000', // Ajuste conforme necessário
-        gasPrice: '300', // Ajuste conforme necessário
+        gasPrice: '120746559', // Ajuste conforme necessário
       });
 
     console.log('Contrato implantado com sucesso no endereço:', deployedContract.options.address);
@@ -55,7 +54,7 @@ const transferToken = async (tokenAddress, recipientAddress) => {
         await contract.methods.transfer(recipientAddress, 100).send({
           from: account,
           gas: 100000, // Ajuste conforme necessário
-          gasPrice: 300
+          gasPrice: 120746559
       });
 
         console.log(`Transferência de token realizada com sucesso para ${recipientAddress}`);

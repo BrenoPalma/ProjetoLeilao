@@ -33,7 +33,7 @@ function CriarLeilao() {
 
   const handleMostrarGanhador = async () => {
     try {
-      const resultado = await mostrarGanhador(leilaoAddress);
+      const resultado = await mostrarGanhador(leilaoadress2);
       setGanhador(resultado.maiorLicitante); // Assume que maiorLicitante é uma string
       setMaiorLance(resultado.maiorLance); // Assume que maiorLance é uma string
     } catch (error) {

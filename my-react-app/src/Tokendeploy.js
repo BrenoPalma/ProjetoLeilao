@@ -6,7 +6,6 @@ const deployContract = async () => {
   }
 
   const web3 = new Web3(window.ethereum);
-  
   // Solicita acesso às contas do MetaMask
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   
@@ -17,6 +16,10 @@ const deployContract = async () => {
   const contract = new web3.eth.Contract(contractAbi.abi);
 
   try {
+    const gasEstimate = await contract.deploy({
+      data: contractAbi.bytecode, // O bytecode do contrato
+      arguments: ['1000000'], // Argumento de exemplo: supply inicial
+  }).estimateGas({ from: account });
     // Implanta o contrato
     const deployedContract = await contract
       .deploy({
@@ -25,8 +28,8 @@ const deployContract = async () => {
       })
       .send({
         from: account,
-        gas: '1500000', // Ajuste conforme necessário
-        gasPrice: '120746559', // Ajuste conforme necessário
+        gas: gasEstimate, // Ajuste conforme necessário
+        gasPrice: '2000000000', // Ajuste conforme necessário
       });
 
     console.log('Contrato implantado com sucesso no endereço:', deployedContract.options.address);
@@ -42,19 +45,22 @@ const transferToken = async (tokenAddress, recipientAddress) => {
       const web3 = new Web3(window.ethereum);
       // Solicita acesso às contas do MetaMask
       await window.ethereum.request({ method: 'eth_requestAccounts' });
-  
+
       const accounts = await web3.eth.getAccounts();
       const account = accounts[0];
       try{
 
         // Inicializa o contrato com a ABI e o endereço do token
         const contract = new web3.eth.Contract(contractAbi.abi, tokenAddress);
+        const gasEstimate = await contract.methods.transfer(recipientAddress, 100).estimateGas({
+        from: account
+    });
 
         // Chama o método de transferência do contrato
         await contract.methods.transfer(recipientAddress, 100).send({
           from: account,
-          gas: 100000, // Ajuste conforme necessário
-          gasPrice: 120746559
+          gas: gasEstimate, // Ajuste conforme necessário
+          gasPrice: 2000000000
       });
 
         console.log(`Transferência de token realizada com sucesso para ${recipientAddress}`);

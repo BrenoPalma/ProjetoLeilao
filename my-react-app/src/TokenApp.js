@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { deployContract, transferToken, balance } from './Tokendeploy';
-
+import './index.css';
 function TokenApp() {
   const [contractAddress, setContractAddress] = useState(null);
   const [recipientAddress, setRecipientAddress] = useState('');

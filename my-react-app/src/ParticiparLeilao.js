@@ -114,6 +114,7 @@ function ParticiparLeilao(){
             </label>
             <button onClick={handleRevelarLance}>Revelar Lance</button>
             <p>{revelarStatus}</p>
+            <h2>Resultado</h2>
             <label>
             Endereço do Leilão:
             <input

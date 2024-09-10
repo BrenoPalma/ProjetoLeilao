@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { deployLeilao, finalizarLeilao, mostrarGanhador } from './Leilaodeploy'; // Certifique-se de que a função mostrarGanhador está exportada
-
+import './index.css';
 function CriarLeilao() {
   const [tokenAddress, setTokenAddress] = useState('');
   const [tempoLance, setTempoLance] = useState('');
@@ -43,6 +43,7 @@ function CriarLeilao() {
 
   return (
     <div>
+      <h1>Criar Leilão</h1>
       <label>
         Endereço do Token:
         <input

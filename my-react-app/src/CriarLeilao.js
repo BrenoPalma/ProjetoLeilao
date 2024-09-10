@@ -77,6 +77,7 @@ function CriarLeilao() {
         </div>
       )}
       <div>
+      <h2>Finalizar Leilão</h2>
       <label>
         Endereço Leilão:
         <input
@@ -89,6 +90,7 @@ function CriarLeilao() {
       <p>{finalizarStatus}</p> {/* Mensagem de status da finalização */}
       </div>
       <div>
+      <h2>Mostrar Ganhador</h2>
       <label>
         Endereço Leilão:
         <input

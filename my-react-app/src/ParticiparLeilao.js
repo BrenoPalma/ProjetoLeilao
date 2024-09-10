@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { enviarLance,revelarLance,mostrarGanhador } from './Leilaodeploy';
+import { enviarLance,revelarLance,mostrarGanhador,conferirTempo } from './Leilaodeploy';
 
 function ParticiparLeilao(){
     //usuario precisa do endereço do leilao e do valor do lance e de um segredo que ele ira criar
@@ -11,6 +11,9 @@ function ParticiparLeilao(){
     const [revelarStatus, setRevelarStatus] = useState(''); 
     const [ganhador, setGanhador] = useState(''); // Novo estado para o ganhador
     const [maiorLance, setMaiorLance] = useState(''); // Novo estado para o maior lance
+    const [leilaotempolance, setLeilaoTempoLance] = useState(''); // Novo estado para o tempo de lance
+    const [leilaotemporevelacao, setLeilaoTempoRevelacao] = useState(''); // Novo estado para o tempo de revelação
+    const [verificarStatus, setVerificarStatus] = useState('');
     //criar handle para participar do leilao
     const handleParticiparLeilao = async () => {
         try {
@@ -56,9 +59,37 @@ function ParticiparLeilao(){
           setRevelarStatus('Erro ao mostrar ganhador: ' + error.message);
         }
       };
+      const handleVerificarLeilao = async () => {
+        try {
+          const { dateLance, dateRevelacao } = await conferirTempo(leilaoAddress);
+          setLeilaoTempoLance(dateLance);
+          setLeilaoTempoRevelacao(dateRevelacao);
+          setVerificarStatus('Leilão verificado com sucesso!');
+        } catch (error) {
+          setVerificarStatus('Erro ao verificar leilão: ' + error.message);
+        }
+      }
     return (
         <div>
           <h1>Participar do Leilão</h1>
+          <h2>Verificar Leilao</h2>
+          <label>
+            Endereço do Leilão:
+            <input
+              type="text"
+              value={leilaoAddress}
+              onChange={(e) => setLeilaoAddress(e.target.value)}
+            />
+          </label>
+          <button onClick={handleVerificarLeilao}>Verificar Leilão</button>
+          <p>{verificarStatus}</p>
+          {leilaotempolance && (
+            <div>
+              <p>Tempo de Lance: {leilaotempolance}</p>
+              <p>Tempo de Revelação: {leilaotemporevelacao}</p>
+            </div>
+          )}
+          <h2>Lance</h2>
           <label>
             Endereço do Leilão:
             <input

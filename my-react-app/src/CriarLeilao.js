@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { deployLeilao, finalizarLeilao, mostrarGanhador } from './Leilaodeploy'; // Certifique-se de que a função mostrarGanhador está exportada
+import { deployLeilao, finalizarLeilao, mostrarGanhador, conferirTempo } from './Leilaodeploy'; // Certifique-se de que a função mostrarGanhador está exportada
 import './index.css';
 function CriarLeilao() {
   const [tokenAddress, setTokenAddress] = useState('');
@@ -11,11 +11,17 @@ function CriarLeilao() {
   const [ganhador, setGanhador] = useState(''); // Novo estado para o ganhador
   const [maiorLance, setMaiorLance] = useState(''); // Novo estado para o maior lance
   const [leilaoadress2, setLeilaoAdress2] = useState(''); // Novo estado para o endereço do leilão
+  const [leilaotempolance, setLeilaoTempoLance] = useState(''); // Novo estado para o tempo de lance
+  const [leilaotemporevelacao, setLeilaoTempoRevelacao] = useState(''); // Novo estado para o tempo de revelação
 
   const handleCriarLeilao = async () => {
     try {
       const address = await deployLeilao(tempoLance, tempoRevelacao, tokenAddress);
       setLeilaoAddress(address);
+      
+      const { dateLance, dateRevelacao } = await conferirTempo(address);
+      setLeilaoTempoLance(dateLance);
+      setLeilaoTempoRevelacao(dateRevelacao);
       setLeilaoStatus('Leilão criado com sucesso!');
     } catch (error) {
       setLeilaoStatus('Erro ao criar leilão: ' + error.message);
@@ -74,6 +80,8 @@ function CriarLeilao() {
         <div>
           <h2>Leilão Criado</h2>
           <p>Endereço do leilão: {leilaoAddress}</p>
+          <p>Tempo de Lance: {leilaotempolance}</p>
+          <p>Tempo de Revelação: {leilaotemporevelacao}</p>
         </div>
       )}
       <div>

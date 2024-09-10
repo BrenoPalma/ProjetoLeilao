@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import contractAbi from './contracts/LeilaoAsCegas.json'; // ABI e bytecode do contrato
 import contractAbiToken from './contracts/DigitalToken.json';
+import { format, toZonedTime } from 'date-fns-tz';
 const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
     if (typeof window.ethereum === 'undefined') {
         throw new Error('MetaMask is not installed');
@@ -32,26 +33,40 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
         });
     
         console.log('Contrato implantado com sucesso no endereço:', deployedContract.options.address);
-
-
-        const dContract = new web3.eth.Contract(contractAbi.abi, deployedContract.options.address);
-        const fimPeriodoLance = await dContract.methods.fimPeriodoLances().call();
-        const fimPeriodoLanceNumber = Number(fimPeriodoLance);
-        console.log('Fim do período de lances:', fimPeriodoLance);
-        const dateLance = new Date(fimPeriodoLanceNumber * 1000);
-        console.log(dateLance.toUTCString());
-        const fimPeriodoRevelacao = await dContract.methods.fimPeriodoRevelacao().call();
-        const fimPeriodoRevelacaoNumber = Number(fimPeriodoRevelacao);
-        console.log('Fim do período de revelação:', fimPeriodoRevelacao);
-        const dateRevelacao = new Date(fimPeriodoRevelacaoNumber * 1000);
-        console.log(dateRevelacao.toUTCString()); // Converte para um formato de data UTC legível
-        
         return deployedContract.options.address; // Retorna o endereço do contrato implantado
     } catch (error) {
         console.error('Erro ao implantar o contrato:', error);
         throw error;
     }
     }
+
+    const conferirTempo = async (leilaoAddress) => {
+        const web3 = new Web3(window.ethereum);
+        const Contract = new web3.eth.Contract(contractAbi.abi, leilaoAddress);
+        const fimPeriodoLance = await Contract.methods.fimPeriodoLances().call();
+        const fimPeriodoLanceNumber = Number(fimPeriodoLance);
+        const dateLanceUTC = new Date(fimPeriodoLanceNumber * 1000);
+        const dateLanceBRT = toZonedTime(dateLanceUTC, 'America/Sao_Paulo');
+    
+        const fimPeriodoRevelacao = await Contract.methods.fimPeriodoRevelacao().call();
+        const fimPeriodoRevelacaoNumber = Number(fimPeriodoRevelacao);
+        const dateRevelacaoUTC = new Date(fimPeriodoRevelacaoNumber * 1000);
+        const dateRevelacaoBRT = toZonedTime(dateRevelacaoUTC, 'America/Sao_Paulo');
+    
+        const formattedDateLance = format(dateLanceBRT, 'dd-MM-yyyy HH:mm:ss', { timeZone: 'America/Sao_Paulo' });
+        const formattedDateRevelacao = format(dateRevelacaoBRT, 'dd-MM-yyyy HH:mm:ss', { timeZone: 'America/Sao_Paulo' });
+    
+        console.log('Fim do período de lance (BRT):', formattedDateLance);
+        console.log('Fim do período de revelação (BRT):', formattedDateRevelacao);
+    
+        return { dateLance: formattedDateLance, dateRevelacao: formattedDateRevelacao };
+    };
+
+
+
+
+
+
 
     const enviarLance = async (leilaoAddress, lance, segredo) => {
         if (typeof window.ethereum === 'undefined') {
@@ -190,5 +205,6 @@ const deployLeilao = async (duracaoLance, duracaoRevelacao, tokenAddress) => {
     export { revelarLance };
     export { finalizarLeilao };
     export { mostrarGanhador };
+    export { conferirTempo };
 
    
